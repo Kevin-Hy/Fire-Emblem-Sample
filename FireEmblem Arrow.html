@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Emblem Byleth Sample 2</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+    <script src="SplitText.min.js"></script>
+    <style type ="text/css">
+        body{
+            background-color: #36393e;
+        }
+        #mainCont{
+            border-style: solid;
+            width: 1024px;
+            height: 1024px;
+            overflow: hidden;
+            position: relative;
+        }
+        .back1,.faceB1,.name1,.text1,.textB1,.face1,.arrow1{
+            position: absolute;
+            overflow: hidden;
+        }
+        .face1,.faceB1,.name1,.textB1,.arrow1{
+            opacity: 100;
+        }
+        #bylethText{
+            position: relative;
+            left: 124px;
+            top: 800px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainCont">
+        <!--Quick reminder, last one placed has priority placement 
+            (so whichever you want overlayed on top, place it last)
+
+            Assets acquired for learning purposes from: 
+            https://www.spriters-resource.com/nintendo_switch/fireemblemthreehouses/
+        -->
+        <image src="background.png" class="back1" id="back1"/>
+        <image src="nameplate.png" class="name1" id="name1"/>
+        <image src="text.png" class="text1" id="text1"/>
+        <image src="textbox.png" class="textB1" id="textB1"/>
+        <image src="faceBack.png" class="faceB1" id="faceB1"/>
+        <img src="bylethFace.png" class="face1" id="face1"/>
+        <img src="arrow.png" class="arrow1" id="arrow1"/>
+        <div id="bylethText"> I am Byleth, I wield the Crest of Flames.</div>
+        <svg viewBox = "0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        </svg>
+    </div>
+    <script type="text/javascript">
+        gsap.registerPlugin(SplitText);
+
+        let tl = gsap.timeline();
+        //separate timeline for the animated arrow
+        let tl2 = gsap.timeline({delay:5, repeat:-1});
+
+        bylethChat= new SplitText("#bylethText", 
+        {type:"words, chars"}),
+        chars = bylethChat.chars;
+
+        //Create effect that acts like a fade-in
+        gsap.registerEffect({
+            name: "fadeIn",
+            effect: (targets, config) => {
+                return gsap.from(targets, {duration: config.duration, opacity: 0});},
+                defaults: {duration: 2},extendTimeline: true,
+        });
+
+        gsap.set(".arrow1",{x:450, y:876});
+        gsap.set(arrow1,{x:457});
+        gsap.set(textB1,{y:707});
+        gsap.set([faceB1,face1],{x:450,y:512});
+        gsap.set(name1,{x:-640});
+        gsap.set(text1,{x:188, y:20});
+
+        tl.to(name1,{duration: 2.5, x:0, ease:Power1.easeOut})
+          .fadeIn([faceB1,textB1],"-=.8")
+          .fadeIn(face1,"-=.5")
+          .fadeIn(text1,"-=2")
+        //tween for text appearance
+          tl.from(chars, {
+                duration: 0.25,
+                opacity: 0,
+                scale: 0,
+                x: -20,
+                rotationX: 180,
+                transformOrigin: "0% 0%",
+                stagger: 0.08
+        });
+
+        //arrow animation pretends to be like chatbox -> next animation
+        tl2.from(arrow1, {duration: .80, opacity: 0, x:"-=15", ease:Power0.easeNone})
+            .to(arrow1, {duration: .80, opacity: 0, x:"+=15",ease:Power0.easeNone});
+
+    </script>
+</body>
+</html>
